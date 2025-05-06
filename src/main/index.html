@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>disgourd 🍐</title>
+		<link rel="stylesheet" href="index.css" />
+		<script src="index.js" defer></script>
+	</head>
+	<body>
+		<div class="drawer">
+			<div id="exploreContainer" class="container"></div>
+			<div id="serverContainer" class="container active"></div>
+			<div id="channelContainer" class="container"></div>
+		</div>
+		<div class="bottom-bar">
+			<span class="item-group">
+				<img data-target="exploreContainer" src="../assets/icons/sparkle.svg" class="sidebar-selector" title="Explore Public Servers">
+				<img data-target="serverContainer" src="../assets/icons/server.svg" class="sidebar-selector" title="Servers">
+				<img data-target="channelContainer" src="../assets/icons/list_tree.svg" class="sidebar-selector" title="Channels" >
+			</span>
+			<span id="userInfo" class="item-group">
+				<img id="user-pfp" class="pfp">
+				<img src="../assets/icons/caret_up.svg" class="tick">
+			</span>
+		</div>
+		<div id="content">
+			<div id="text">
+				<div id="messageInput">
+					<input type="text" id="message" placeholder="Message">
+					<button id="send">Send</button>
+				</div>
+			</div>
+			<div id="whiteboard"><h1>whiteboard</h1></div>
+		</div>
+		<div id="centerMenu">
+			<div id="shadow"></div>
+			<div id="createServer">
+				<h1 class="title">Create Server</h1>
+				<input type="text" placeholder="Name" id="serverName"><br>
+				<div class="container">
+					<div>
+						<span class="vlabel">Public:</span>
+						<input type="checkbox" id="serverVisibility">
+					</div>
+					<button id="submitServer">Create</button>
+				</div>
+			</div>
+			<div id="createChannel">
+				<h1 class="title">Create Channel</h1>
+				<input type="text" placeholder="Name" id="channelName"><br>
+				<div class="container">
+					<div id="typeSelector">
+						<span class="active">Text</span><span>Whiteboard</span>
+					</div>
+					<button id="submitChannel">Create</button>
+				</div>
+			</div>
+		</div>
+		<div class="menu" style="display: none;"></div>
+	</body>
+</html>
