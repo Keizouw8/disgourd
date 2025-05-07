@@ -25,12 +25,20 @@
 		</div>
 		<div id="content">
 			<div id="text">
+				<div id="messageContainer"></div>
 				<div id="messageInput">
 					<input type="text" id="message" placeholder="Message">
 					<button id="send">Send</button>
 				</div>
 			</div>
-			<div id="whiteboard"><h1>whiteboard</h1></div>
+			<div id="whiteboard">
+				<canvas class="whiteboard" height="1000" width="1000"></canvas>
+				<div class="settings">
+					<div class="color">
+						<input type="color">
+					</div>
+				</div>
+			</div>
 		</div>
 		<div id="centerMenu">
 			<div id="shadow"></div>
@@ -54,6 +62,11 @@
 					</div>
 					<button id="submitChannel">Create</button>
 				</div>
+			</div>
+			<div id="inviteUser">
+				<h1 class="title">Invite User</h1>
+				<input type="text" placeholder="Username" id="invitedUsername">
+				<button id="submitUser">Create</button>
 			</div>
 		</div>
 		<div class="menu" style="display: none;"></div>

@@ -19,6 +19,12 @@ body{
 
 *{
 	font-family: Regular;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+	display: none
 }
 
 .bottom-bar{
@@ -173,7 +179,7 @@ body{
 	height: 100vh;
 }
 
-#createServer{
+#createServer, #createChannel, #inviteUser{
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -185,7 +191,7 @@ body{
 	color: rgb(220, 220, 220);
 }
 
-#serverName, #channelName{
+#serverName, #channelName, #invitedUsername{
 	margin: 10px 0px;
 	background: rgb(40, 44, 51);
 	border: 1px solid rgb(70, 75, 87);
@@ -196,11 +202,11 @@ body{
 	width: 200px;
 }
 
-#serverName::placeholder, #channelName::placeholder{
+#serverName::placeholder, #channelName::placeholder, , #invitedUsername::placeholder{
 	color: rgb(150, 150, 150);
 }
 
-#serverName:focus, #channelName:focus{
+#serverName:focus, #channelName:focus, #invitedUsername:focus{
 	outline: none;
 }
 
@@ -227,6 +233,10 @@ button{
 button:hover{
 	color: rgb(240, 240, 240);
 	background: transparent;
+}
+
+#submitUser{
+	margin-left: 5px;
 }
 
 .title{
@@ -262,18 +272,6 @@ button:hover{
 	bottom: 0.5px;
 	border: 2px solid rgb(40, 44, 51);
 	border-radius: 5px;
-}
-
-#createChannel{
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	background: rgb(47, 52, 62);
-	padding: 20px;
-	border: 1px solid rgb(70, 75, 87);
-	border-radius: 5px;
-	color: rgb(220, 220, 220);
 }
 
 #createChannel #typeSelector span:first-of-type{
@@ -365,4 +363,83 @@ button:hover{
 #messageInput button:hover{
 	color: rgb(240, 240, 240);
 	background: transparent;
+}
+
+#messageContainer{
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: calc(100% - 51px);
+	width: 100%;
+}
+
+.message{
+	color: white;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	width: 100%;
+	padding: 10px 10px;
+}
+
+.message:hover{
+	background: rgb(54, 60, 70);
+}
+
+.message img{
+	height: 32px;
+	border-radius: 25%;
+	margin-right: 5px;
+}
+
+.message .name{
+	color: rgb(220, 220, 220);
+	font-size: 14px;
+	display: block;
+}
+
+.message .content{
+	color: rgb(220, 220, 220);
+	font-size: 14px;
+}
+
+#whiteboard{
+	overflow: scroll;
+	height: calc(100vh - 35px);
+}
+
+.whiteboard{
+	background: white;
+	height: 1000px;
+	width: 1000px;
+	cursor: crosshair;
+}
+
+#whiteboard .settings{
+	position: absolute;
+	bottom: 40px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0,0,0,0.5);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 20px;
+	border-radius: 5px;
+}
+
+.settings .color{
+	border-radius: 50%;
+	aspect-ratio: 1/1;
+	overflow: hidden;
+	background: black;
+	height: 20px;
+	width: 20px;
+}
+
+.settings .color input{
+	opacity: 0;
+	height: 200px;
+	width: 200px;
+	cursor: pointer;
 }

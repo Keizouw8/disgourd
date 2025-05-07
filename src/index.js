@@ -8,6 +8,7 @@ if (require("electron-squirrel-startup")) app.quit();
 var token = settings.getSync("userToken");
 var socket;
 var user;
+var mainWindow;
 
 app.whenReady().then(async function(){
 	const loadingWindow = new BrowserWindow({
@@ -24,8 +25,23 @@ app.whenReady().then(async function(){
 
 app.on("window-all-closed", () => !token && app.quit());
 
-ipcMain.on("listenTo", async function(_, channel){
-	socket.emit("listenTo", channel);
+ipcMain.on("sendMessage", async function(_, data){
+	fetch("https://gourd.madum.cc/api/sendMessage", {
+		method: "POST",
+		headers: {
+			"content-type": "application/json",
+			"Authorization": `Bearer ${token}`
+		},
+		body: JSON.stringify(data)
+	});
+});
+
+ipcMain.on("listenToChannel", async function(_, channel){
+	socket.emit("listenToChannel", channel);
+});
+
+ipcMain.on("listenToServer", async function(_, server){
+	socket.emit("listenToServer", server);
 });
 
 ipcMain.on("auth", async function(event, auth){
@@ -34,7 +50,6 @@ ipcMain.on("auth", async function(event, auth){
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify(auth.info)
 	});
-
 	if(!response.ok) return event.sender.send("error", await response.text());
 	const value = await response.json();
 	token = value.token;
@@ -73,9 +88,65 @@ ipcMain.handle("createChannel", async function(_, info){
 	return { success: true, data };
 });
 
+ipcMain.handle("deleteChannel", async function(_, info){
+	const response = await fetch(`https://gourd.madum.cc/api/deleteChannel`, {
+		method: "POST",
+		headers: {
+			"content-type": "application/json",
+			"Authorization": `Bearer ${token}`
+		},
+		body: JSON.stringify(info)
+	});
+	if(!response.ok) return { success: false, reason: await response.text() };
+	return { success: true };
+});
+
+ipcMain.handle("inviteUser", async function(_, info){
+	const response = await fetch(`https://gourd.madum.cc/api/inviteUser`, {
+		method: "POST",
+		headers: {
+			"content-type": "application/json",
+			"Authorization": `Bearer ${token}`
+		},
+		body: JSON.stringify(info)
+	});
+	if(!response.ok) return { success: false, reason: await response.text() };
+	return { success: true };
+});
+
+ipcMain.handle("deleteServer", async function(_, info){
+	const response = await fetch(`https://gourd.madum.cc/api/deleteServer`, {
+		method: "POST",
+		headers: {
+			"content-type": "application/json",
+			"Authorization": `Bearer ${token}`
+		},
+		body: JSON.stringify(info)
+	});
+	if(!response.ok) return { success: false, reason: await response.text() };
+	return { success: true };
+});
+
+ipcMain.handle("drawWhiteboard", async function(_, strokes){
+
+})
+
 function createSocket(token){
 	socket = io("https://gourd.madum.cc", { auth: { token } });
 	socket.on("invalidUser", app.quit);
+	socket.on("message", (data) => mainWindow.webContents.send("message", data));
+	socket.on("newChannel", (data) => mainWindow.webContents.send("newChannel", data));
+	socket.on("deletedChannel", (data) => mainWindow.webContents.send("deletedChannel", data));
+	socket.on("deletedServer", (data) => mainWindow.webContents.send("deletedServer", data));
+	socket.on("refreshUser", async function(){
+		try{
+			user = await getInfo();
+		}catch{
+			console.log("Can't connect to server :(");
+		}
+		if(!user) app.quit();
+		mainWindow.webContents.send("user", user);
+	});
 }
 
 async function setup(){
@@ -90,11 +161,12 @@ async function setup(){
 }
 
 function createMainWindow(){
-	const mainWindow = new BrowserWindow({
+	mainWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
 		minWidth: 400,
 		minHeight: 400,
+		autoHideMenuBar: true,
 		webPreferences: {
 			preload: path.join(__dirname, "main/preload.js")
 		}
