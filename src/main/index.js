@@ -18,7 +18,7 @@ document.getElementById("submitServer").addEventListener("click", async function
 	div.id = `server${data}`;
 	var img = document.createElement("img");
 	img.className = "icon";
-	img.src = `http://localhost:3000/icon/${data}`;
+	img.src = `https://gourd.madum.cc/icon/${data}`;
 	var span = document.createElement("span");
 	span.className = "name";
 	span.innerText = name;
@@ -55,7 +55,7 @@ document.querySelectorAll(".sidebar-selector").forEach(selector => selector.addE
 	document.querySelectorAll(".drawer > div").forEach(e => e.className = "container");
 	document.getElementById(selector.dataset.target).className = "container active";
 	if (selector.dataset.target != "exploreContainer") return;
-	let response = await fetch("http://localhost:3000/servers", {
+	let response = await fetch("https://gourd.madum.cc/servers", {
 		method: "POST"
 	});
 	if (!response.ok) return;
@@ -68,7 +68,7 @@ document.querySelectorAll(".sidebar-selector").forEach(selector => selector.addE
 		div.id = `server${server._id}`;
 		var img = document.createElement("img");
 		img.className = "icon";
-		img.src = `http://localhost:3000/icon/${server._id}`;
+		img.src = `https://gourd.madum.cc/icon/${server._id}`;
 		var span = document.createElement("span");
 		span.className = "name";
 		span.innerText = server.name;
@@ -114,7 +114,7 @@ document.getElementById("channelContainer").addEventListener("contextmenu", func
 
 window.electronAPI.onUser(function(_, user){
 	// document.getElementById("username").innerText = user.username;
-	document.getElementById("user-pfp").src = `http://localhost:3000/pfp/${user._id}`;
+	document.getElementById("user-pfp").src = `https://gourd.madum.cc/pfp/${user._id}`;
 	serverContainer.innerHTML = "";
 	for(let server of user.servers){
 		var div = document.createElement("div");
@@ -123,7 +123,7 @@ window.electronAPI.onUser(function(_, user){
 		div.id = `server${server._id}`;
 		var img = document.createElement("img");
 		img.className = "icon";
-		img.src = `http://localhost:3000/icon/${server._id}`;
+		img.src = `https://gourd.madum.cc/icon/${server._id}`;
 		var span = document.createElement("span");
 		span.className = "name";
 		span.innerText = server.name;
@@ -138,7 +138,7 @@ async function setServer(sid){
 	serverid = sid;
 	document.querySelectorAll(".server").forEach(e => e.className = "server");
 	document.querySelectorAll(`#server${sid}`).forEach(e => e.className = "server active");
-	let response = await fetch(`http://localhost:3000/channels/${sid}`, { method: "POST" });
+	let response = await fetch(`https://gourd.madum.cc/channels/${sid}`, { method: "POST" });
 	if (!response.ok) return;
 	let channels = await response.json();
 	channelContainer.innerHTML = "";
@@ -171,11 +171,12 @@ async function setChannel(cid){
 	channelid = cid;
 	document.querySelectorAll(".channel").forEach(e => e.className = "channel");
 	document.getElementById(`channel${cid}`).className = "channel active";
-	let response = await fetch(`http://localhost:3000/channel/${cid}`, { method: "POST" });
+	let response = await fetch(`https://gourd.madum.cc/channel/${cid}`, { method: "POST" });
 	if (!response.ok) return;
 	let channel = await response.json();
 	document.querySelectorAll("#content > *").forEach(e => e.className = "");
 	document.querySelector(`#content > #${channel.category}`).className = "active";
+	window.electronAPI.listenTo(channel.cid);
 }
 
 function showMenu(e){

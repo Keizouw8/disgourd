@@ -24,8 +24,12 @@ app.whenReady().then(async function(){
 
 app.on("window-all-closed", () => !token && app.quit());
 
+ipcMain.on("listenTo", async function(_, channel){
+	socket.emit("listenTo", channel);
+});
+
 ipcMain.on("auth", async function(event, auth){
-	const response = await fetch(`http://localhost:3000/${auth.type}`, {
+	const response = await fetch(`https://gourd.madum.cc/${auth.type}`, {
 		method: "POST",
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify(auth.info)
@@ -42,7 +46,7 @@ ipcMain.on("auth", async function(event, auth){
 });
 
 ipcMain.handle("createServer", async function(_, info){
-	const response = await fetch(`http://localhost:3000/api/createServer`, {
+	const response = await fetch(`https://gourd.madum.cc/api/createServer`, {
 		method: "POST",
 		headers: {
 			"content-type": "application/json",
@@ -56,7 +60,7 @@ ipcMain.handle("createServer", async function(_, info){
 });
 
 ipcMain.handle("createChannel", async function(_, info){
-	const response = await fetch(`http://localhost:3000/api/createChannel`, {
+	const response = await fetch(`https://gourd.madum.cc/api/createChannel`, {
 		method: "POST",
 		headers: {
 			"content-type": "application/json",
@@ -70,7 +74,7 @@ ipcMain.handle("createChannel", async function(_, info){
 });
 
 function createSocket(token){
-	socket = io("http://localhost:3000", { auth: { token } });
+	socket = io("https://gourd.madum.cc", { auth: { token } });
 	socket.on("invalidUser", app.quit);
 }
 
@@ -123,7 +127,7 @@ function createAuthWindow(){
 
 async function getInfo(){
 	if(!token) return false;
-	var response = await fetch(`http://localhost:3000/api/me`, {
+	var response = await fetch(`https://gourd.madum.cc/api/me`, {
 		method: "POST",
 		headers: { "Authorization": `Bearer ${token}` }
 	});
