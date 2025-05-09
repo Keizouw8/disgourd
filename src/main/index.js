@@ -394,9 +394,8 @@ document.querySelector(".settings .color input").addEventListener("change", func
 	ctx.strokeStyle = e.target.value;
 });
 
-window.electronAPI.onDrawWhiteboard(function (input){
+window.electronAPI.onDrawWhiteboard(function (_, input){
 	var data = ctx.createImageData(256, 256);
 	data.data.set(new Uint8ClampedArray(input));
-	console.log(data);
 	ctx.putImageData(data, 0, 0);
 });
