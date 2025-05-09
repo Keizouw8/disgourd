@@ -410,8 +410,8 @@ button:hover{
 
 .whiteboard{
 	background: white;
-	height: 1000px;
-	width: 1000px;
+	height: 256px;
+	width: 256px;
 	cursor: crosshair;
 }
 
@@ -442,4 +442,23 @@ button:hover{
 	height: 200px;
 	width: 200px;
 	cursor: pointer;
+}
+
+.shade{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.shade h1{
+	position: absolute;
+	color: white;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin: 0;
+	padding: 0;
 }

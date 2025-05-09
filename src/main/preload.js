@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron/renderer");
 contextBridge.exposeInMainWorld("electronAPI", {
 	onUser: (cb) => ipcRenderer.on("user", cb),
 	onMessage: (cb) => ipcRenderer.on("message", cb),
+	onDrawWhiteboard: (cb) => ipcRenderer.on("drawWhiteboard", cb),
 	onNewChannel: (cb) => ipcRenderer.on("newChannel", cb),
 	onDeletedChannel: (cb) => ipcRenderer.on("deletedChannel", cb),
 	onDeletedServer: (cb) => ipcRenderer.on("deletedServer", cb),
@@ -13,5 +14,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	inviteUser: (data) => ipcRenderer.invoke("inviteUser", data),
 	listenToChannel: (channel) => ipcRenderer.send("listenToChannel", channel),
 	listenToServer: (server) => ipcRenderer.send("listenToServer", server),
+	drawWhiteboard: (channelid, imageData) => ipcRenderer.send("drawWhiteboard", { channelid, imageData }),
 	sendMessage: (data) => ipcRenderer.send("sendMessage", data),
 });

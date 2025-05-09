@@ -320,6 +320,17 @@ async function setChannel(cid){
 			document.getElementById("messageContainer").appendChild(div);
 		}
 	}
+	if(channel.category == "whiteboard"){
+		console.log("channel data", channel.data);
+		ctx.clearRect(0, 0, 256, 256);
+		if(channel.data){
+			var data = ctx.createImageData(256, 256);
+			data.data.set(new Uint8ClampedArray(channel.data));
+			console.log(data);
+			ctx.putImageData(data, 0, 0);
+		}
+	}
+
 	document.querySelectorAll("#content > *").forEach(e => e.className = "");
 	document.querySelector(`#content > #${channel.category}`).className = "active";
 }
@@ -340,7 +351,6 @@ const ctx = canvas.getContext("2d");
 
 let drawing = false;
 let previousPosition = [0,0];
-let points = [];
 
 canvas.addEventListener("mousedown", function (e){
 	console.log("mouse down started", ctx);
@@ -353,9 +363,10 @@ canvas.addEventListener("mousedown", function (e){
 	previousPosition = [x, y];
 });
 canvas.addEventListener("mouseup", function (e){
+	console.log("mouse is now up");
 	drawing = false;
-
-	points = [];
+	let imageData = ctx.getImageData(0, 0, 256, 256);
+	window.electronAPI.drawWhiteboard(channelid, imageData);
 });
 canvas.addEventListener("mousemove", function (e){
 	if (!drawing) return;
@@ -381,4 +392,11 @@ document.querySelector(".settings .color input").addEventListener("change", func
 	console.log("change occured", e.target.value);
 	document.querySelector(".settings .color").style.background = e.target.value;
 	ctx.strokeStyle = e.target.value;
+});
+
+window.electronAPI.onDrawWhiteboard(function (input){
+	var data = ctx.createImageData(256, 256);
+	data.data.set(new Uint8ClampedArray(input));
+	console.log(data);
+	ctx.putImageData(data, 0, 0);
 });

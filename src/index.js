@@ -36,12 +36,16 @@ ipcMain.on("sendMessage", async function(_, data){
 	});
 });
 
-ipcMain.on("listenToChannel", async function(_, channel){
+ipcMain.on("listenToChannel", function(_, channel){
 	socket.emit("listenToChannel", channel);
 });
 
-ipcMain.on("listenToServer", async function(_, server){
+ipcMain.on("listenToServer", function(_, server){
 	socket.emit("listenToServer", server);
+});
+
+ipcMain.on("drawWhiteboard", function (_, { channelid, imageData }) {
+	socket.emit("drawWhiteboard", channelid, Array.from(imageData.data));
 });
 
 ipcMain.on("auth", async function(event, auth){
@@ -127,10 +131,6 @@ ipcMain.handle("deleteServer", async function(_, info){
 	return { success: true };
 });
 
-ipcMain.handle("drawWhiteboard", async function(_, strokes){
-
-})
-
 function createSocket(token){
 	socket = io("https://gourd.madum.cc", { auth: { token } });
 	socket.on("invalidUser", app.quit);
@@ -147,6 +147,7 @@ function createSocket(token){
 		if(!user) app.quit();
 		mainWindow.webContents.send("user", user);
 	});
+	socket.on("drawWhiteboard", (data) => mainWindow.webContents.send("drawWhiteboard", data));
 }
 
 async function setup(){
